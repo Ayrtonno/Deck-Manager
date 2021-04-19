@@ -23,17 +23,26 @@ const main = async () => {
     const decks = new Map()
     decks.set("0", tuna)
     decks.set("1", simo) */
-    await tuna.save()
-    await simo.save()
+    //await tuna.save()
+    //await simo.save()
 
     app.get("/deck", async (req, res) => {
         //res.json([...decks.values()])
         try {
-            const decks = await Deck.find()
-            res.json(decks)   
+            //    const decks = await Deck.find({name: "Simodeck"})
+            let decks
+            if (req.query.name) {
+                decks = await Deck.find({ name: req.query.name })
+            } if (decks.length == 0) {
+                res.status(404).send("There is no such deck!")
+                return
+            } else {
+                decks = await Deck.find()
+            }
+            res.json(decks)
         } catch (error) {
             console.error(error)
-            res.send("Error")
+            res.send("Error!")
         }
     })
 
@@ -41,7 +50,7 @@ const main = async () => {
         try {
             const { id } = req.params
             const deck = await Deck.findById(id)
-            res.json(deck) 
+            res.json(deck)
         } catch (error) {
             console.error(error)
             res.send("Error")
@@ -65,7 +74,7 @@ const main = async () => {
         try {
             const { id } = req.params
             const editDeck = await Deck.findByIdAndUpdate(id, req.body)
-            res.json(editDeck)   
+            res.json(editDeck)
         } catch (error) {
             console.error(error)
             res.send("Error")
@@ -77,7 +86,7 @@ const main = async () => {
             //{id: } prende la variabile prima dei : e la sostituisce con quello dopo
             const { id } = req.params
             await Deck.findByIdAndRemove(id)
-            res.send("Deleted")            
+            res.send("Deleted")
         } catch (error) {
             console.error(error)
             res.send("Error")
