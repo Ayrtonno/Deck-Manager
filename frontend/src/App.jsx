@@ -17,32 +17,39 @@ const Deck = (props) => {
 
 // per react quest "App" è un componente funzionale perche è una funzione di per sè.
 const App = () => {
-    const [counter, setCounter] = useState(0)
+    /* const [counter, setCounter] = useState(0) */
 
     const [decks, setDecks] = useState([])
     useEffect(() => {
-        axios.get("http://localhost:8080/deck").then((response) => setDecks(response.data))
-    })
+        axios.get("http://localhost:8080/deck", { params: { offset: 0, limit: 10 } }).then((response) => setDecks(response.data.docs))
+    }, [])
 
-    useEffect(() => {
+
+
+    /* useEffect(() => {
         if (counter === 10) {
             console.log("Bravo scemo")
         }
         // [counter] è un array delle dipendenza, quando cambia una di queste variabili viene richiamata la funzione all'interno
-    }, [counter])
+    }, [counter]) */
+    /* useEffect(() => {
+        setInterval(() => {
+            console.log("...")
+            console.log("Sei gay!")
+        }, 10000)
+    }) */
+    const [nameFilter, setNameFilter] = useState("")
     return (
         <div>
-            <button onClick={() => setCounter((current) => current + 1)}>
-                +1
-            </button>
-            <button onClick={() => setCounter((current) => current - 1)}>
-                -1
-            </button>
-            <span>
-                {counter}
-            </span>
+            <input type="text" name="Search" onChange={(inputEvent) => setNameFilter(inputEvent.target.value)} />
             <div>
-                {decks.map((deck) => <Deck name={deck.name} type={deck.type} cardNumber={deck.cardNumber} price={deck.price} />)}
+                {decks.filter((deck) => {
+                    if (!nameFilter) {
+                        return true
+                    } else {
+                        return deck.name.toLowerCase().includes(nameFilter.toLowerCase())
+                    }
+                }).map((deck) => <Deck name={deck.name} type={deck.type} cardNumber={deck.cardNumber} price={deck.price} />)}
             </div>
         </div>
     )

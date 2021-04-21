@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "mongoose-paginate-v2": "^1.3.17"
+  }
+}
