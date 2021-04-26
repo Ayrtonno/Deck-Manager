@@ -38,16 +38,17 @@ const App = () => {
             console.log("Sei gay!")
         }, 10000)
     }) */
-    const [nameFilter, setNameFilter] = useState("")
+    const [filters, setFilters] = useState("")
+
     return (
         <div>
-            <input type="text" name="Search" onChange={(inputEvent) => setNameFilter(inputEvent.target.value)} />
+            <input type="text" name="Search" onChange={(inputEvent) => setFilters(inputEvent.target.value)} />
             <div>
                 {decks.filter((deck) => {
-                    if (!nameFilter) {
+                    if (!filters) {
                         return true
                     } else {
-                        return deck.name.toLowerCase().includes(nameFilter.toLowerCase())
+                        return (`${deck.name} ${deck.type} ${deck.cardNumber} ${deck.price}`).toString().toLowerCase().includes(filters.toLowerCase())
                     }
                 }).map((deck) => <Deck name={deck.name} type={deck.type} cardNumber={deck.cardNumber} price={deck.price} />)}
             </div>
@@ -55,3 +56,4 @@ const App = () => {
     )
 }
 export default App
+
