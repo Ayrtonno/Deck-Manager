@@ -1,5 +1,7 @@
 const express = require("express")
 const mongoose = require("mongoose")
+const cors = require('cors')
+
 
 const { Deck } = require("./models/deck")
 const { myMiddleware } = require("./myMiddleware")
@@ -15,6 +17,8 @@ const main = async () => {
     //app.use serve per chiamare middleware json, che serve per parsare il body in json 
     app.use(express.json())
     app.use(myMiddleware)
+    //cors è tipo myMiddleware, ma con le opzioni. Nelle tonde gli passiamo parametri per renderlo piu sicuro
+    app.use(cors())
 
     //variabili in minuscolo, classi in maiuscolo
     const tuna = new Deck({ name: "Tunadeck", type: "Water", cardNumber: 50, price: 5 })

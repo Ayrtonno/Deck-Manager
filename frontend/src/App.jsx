@@ -18,13 +18,18 @@ const Deck = (props) => {
 // per react quest "App" è un componente funzionale perche è una funzione di per sè.
 const App = () => {
     /* const [counter, setCounter] = useState(0) */
-
+    const [filters, setFilters] = useState("")
+    const [page, setPage] = useState(0)
     const [decks, setDecks] = useState([])
+    const [limit, setLimit] = useState(0)
+
     useEffect(() => {
-        axios.get("http://localhost:8080/deck", { params: { offset: 0, limit: 10 } }).then((response) => setDecks(response.data.docs))
-    }, [])
-
-
+        axios.get("http://localhost:8080/deck", { params: { offset: page * 10, limit: 10 } }).then((response) => {
+            setDecks(response.data.docs)
+            setLimit(response.data.totalPages)
+        }
+        )
+    }, [page])
 
     /* useEffect(() => {
         if (counter === 10) {
@@ -38,7 +43,6 @@ const App = () => {
             console.log("Sei gay!")
         }, 10000)
     }) */
-    const [filters, setFilters] = useState("")
 
     return (
         <div>
@@ -52,7 +56,8 @@ const App = () => {
                     }
                 }).map((deck) => <Deck name={deck.name} type={deck.type} cardNumber={deck.cardNumber} price={deck.price} />)}
             </div>
-        </div>
+            <input type="number" min={0} max={limit} name="Page Number" onChange={(inputEvent) => setPage(inputEvent.target.value)} value={page} />
+        </div >
     )
 }
 export default App
