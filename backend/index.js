@@ -2,12 +2,12 @@ const express = require("express")
 const mongoose = require("mongoose")
 const cors = require('cors')
 
-
 const { Deck } = require("./models/deck")
 const { myMiddleware } = require("./myMiddleware")
 const { Card } = require("./models/card")
 const main = async () => {
 
+    const { deckRouter } = require("./routes/deck")
     // Express espone una funzione che crea l'applicazione, quindi chiamiamo questa funzione
     const app = express()
 
@@ -20,6 +20,7 @@ const main = async () => {
     app.use(myMiddleware)
     //cors è tipo myMiddleware, ma con le opzioni. Nelle tonde gli passiamo parametri per renderlo piu sicuro
     app.use(cors())
+    app.use(deckRouter)
 
     //variabili in minuscolo, classi in maiuscolo
     const tuna = new Deck({ name: "Tunadeck", type: "Water", cardNumber: 50, price: 5 })
@@ -31,59 +32,11 @@ const main = async () => {
     //await tuna.save()
     //await simo.save()
 
-    app.get("/deck", async (req, res) => {
-        //res.json([...decks.values()])
-        try {
-            //  const decks = await Deck.find({name: "Simodeck"})
-            let decks
-            if (req.query.name) {
-                decks = await Deck.paginate({ name: req.query.name }, { offset: req.query.offset, limit: req.query.limit })
-            } else {
-                decks = await Deck.paginate({}, { offset: req.query.offset, limit: req.query.limit })
-            }
-            if (decks.totalDocs === 0) {
-                res.status(404).send("There is no such deck!")
-                return
-            } else {
-                res.json(decks)
-            }
-
-        } catch (error) {
-            console.error(error)
-            res.send("Error!")
-        }
-    })
-
     app.get("/deck/:deckId/card", async (req, res) => {
         try {
             const { deckId } = req.params
             const deck = await Deck.findById(deckId).populate("cardList")
             res.json(deck)
-        } catch (error) {
-            console.error(error)
-            res.send("Error")
-        }
-    })
-
-    app.get("/deck/:id", async (req, res) => {
-        try {
-            const { id } = req.params
-            const deck = await Deck.findById(id)
-            res.json(deck)
-            /*  const cardNumber = deck.cardList.length */
-        } catch (error) {
-            console.error(error)
-            res.send("Error")
-        }
-    })
-
-    app.post("/deck", async (req, res) => {
-        try {
-            // new è una keyword per creare un oggetto di una classe, deck è una nuova variabile di tipo Deck, {...req etc, serve per prendere da body tutte le copie chiave valore e ficcarle in un nuovo oggetto
-            const newDeck = new Deck({ ...req.body })
-            await newDeck.save()
-            //res.json serve a rimandarlo al client
-            res.json(newDeck)
         } catch (error) {
             console.error(error)
             res.send("Error")
@@ -104,28 +57,6 @@ const main = async () => {
         }
     })
 
-    app.put("/deck/:id", async (req, res) => {
-        try {
-            const { id } = req.params
-            const editDeck = await Deck.findByIdAndUpdate(id, req.body)
-            res.json(editDeck)
-        } catch (error) {
-            console.error(error)
-            res.send("Error")
-        }
-    })
-
-    app.delete("/deck/:id", async (req, res) => {
-        try {
-            //{id: } prende la variabile prima dei : e la sostituisce con quello dopo
-            const { id } = req.params
-            await Deck.findByIdAndRemove(id)
-            res.send("Deleted")
-        } catch (error) {
-            console.error(error)
-            res.send("Error")
-        }
-    })
 
     app.listen(8080, () => {
         console.log("listening")

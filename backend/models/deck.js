@@ -39,3 +39,4 @@ deckSchema.plugin(mongoosePaginate)
 const Deck = model("Deck", deckSchema)
 
 exports.Deck = Deck
+
