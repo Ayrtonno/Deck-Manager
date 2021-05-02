@@ -20,9 +20,8 @@ const generateDeck = () => {
     price: Number, */
     const name = faker.name.findName()
     const type = faker.commerce.productName()
-    const cardNumber = faker.datatype.number()
     const price = faker.commerce.price()
-    const deck = { name, type, cardNumber, price }
+    const deck = { name, type, price }
     return deck
 }
 
