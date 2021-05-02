@@ -17,9 +17,17 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const deckSchema = new Schema({
     name: { type: String, unique: true },
     type: String,
-    cardNumber: Number,
+    cardList: [{
+        type: Schema.Types.ObjectId,
+        ref: "Card"
+    }],
     price: Number,
 })
+
+deckSchema.virtual("cardNumber").get(function () {
+    return this.cardList.length
+})
+
 
 deckSchema.plugin(mongoosePaginate)
 

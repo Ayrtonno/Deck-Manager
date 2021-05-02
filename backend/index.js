@@ -5,6 +5,7 @@ const cors = require('cors')
 
 const { Deck } = require("./models/deck")
 const { myMiddleware } = require("./myMiddleware")
+const { Card } = require("./models/card")
 const main = async () => {
 
     // Express espone una funzione che crea l'applicazione, quindi chiamiamo questa funzione
@@ -53,11 +54,23 @@ const main = async () => {
         }
     })
 
+    app.get("/deck/:deckId/card", async (req, res) => {
+        try {
+            const { deckId } = req.params
+            const deck = await Deck.findById(deckId).populate("cardList")
+            res.json(deck)
+        } catch (error) {
+            console.error(error)
+            res.send("Error")
+        }
+    })
+
     app.get("/deck/:id", async (req, res) => {
         try {
             const { id } = req.params
             const deck = await Deck.findById(id)
             res.json(deck)
+            /*  const cardNumber = deck.cardList.length */
         } catch (error) {
             console.error(error)
             res.send("Error")
@@ -71,6 +84,20 @@ const main = async () => {
             await newDeck.save()
             //res.json serve a rimandarlo al client
             res.json(newDeck)
+        } catch (error) {
+            console.error(error)
+            res.send("Error")
+        }
+    })
+
+    app.post("/deck/:deckId/card", async (req, res) => {
+        try {
+            const newCard = new Card({ ...req.body })
+            await newCard.save()
+            const deck = await Deck.findById(req.params.deckId)
+            deck.cardList.push(newCard)
+            await deck.save()
+            res.json(newCard)
         } catch (error) {
             console.error(error)
             res.send("Error")
