@@ -8,9 +8,9 @@ deckRouter.get("/deck", async (req, res) => {
         //  const decks = await Deck.find({name: "Simodeck"})
         let decks
         if (req.query.name) {
-            decks = await Deck.paginate({ name: req.query.name }, { offset: req.query.offset, limit: req.query.limit })
+            decks = await Deck.paginate({ name: req.query.name }, { offset: req.query.offset, limit: req.query.limit, sort: { createdAt: "desc" } })
         } else {
-            decks = await Deck.paginate({}, { offset: req.query.offset, limit: req.query.limit })
+            decks = await Deck.paginate({}, { offset: req.query.offset, limit: req.query.limit, sort: { createdAt: "desc" } })
         }
         if (decks.totalDocs === 0) {
             res.status(404).send("There is no such deck!")

@@ -1,6 +1,6 @@
 .quadratone {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   padding: 24px;  
   background-color: black;
   height: 50vh;

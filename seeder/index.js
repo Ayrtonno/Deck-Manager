@@ -26,7 +26,7 @@ const generateDeck = () => {
 }
 
 const main = async () => {
-    for (let index = 0; index < 10; index++) {
+    for (let index = 0; index < 100; index++) {
         const deck = generateDeck()
         const response = await axios.post("http://localhost:8080/deck", { name: deck.name, type: deck.type, cardNumber: deck.cardNumber, price: deck.price })
         const deckId = response.data._id

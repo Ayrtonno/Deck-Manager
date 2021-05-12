@@ -1,25 +1,42 @@
 import React from "react"
 import Card from "@material-ui/core/Card";
+import { useState, useEffect } from "react"
+import axios from "axios"
 
 import classes from "./HomePage.module.css"
 import { CardContent } from "@material-ui/core";
 
-const HomePage = (props) => {
+const HomePage = () => {
+    const [newDecks, setNewDecks] = useState([])
+    useEffect(() => {
+        axios.get("http://localhost:8080/deck", { params: { limit: 5 } }).then((response) => {
+            setNewDecks(response.data.docs)
+        })
+    }, [])
+    /* useEffect(() => {
+        const deckNames = []
+        for (let index = 0; index < newDecks.length; index++) {
+            const element = newDecks[index];
+            deckNames.push(element.name)
+        }
+        console.log(deckNames)
+    }, [newDecks]) */
     return (
         <div className={classes.quadratone}>
             <Card>
                 <CardContent>
-                    All Decks List
+                    New Decks
+                    {newDecks.map((newDeck) => <p>{newDeck.name}</p>)}
                 </CardContent>
             </Card>
             <Card>
                 <CardContent>
-                    Base Decks
+                    Latest Offers
                 </CardContent>
             </Card>
             <Card>
                 <CardContent>
-                    Premium Decks
+                    Popular Decks
                 </CardContent>
             </Card>
         </div>

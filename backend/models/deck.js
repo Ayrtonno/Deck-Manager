@@ -22,7 +22,7 @@ const deckSchema = new Schema({
         ref: "Card"
     }],
     price: Number,
-}, { toJSON: { virtuals: true } })
+}, { toJSON: { virtuals: true }, timestamps: true })
 
 deckSchema.virtual("cardNumber").get(function () {
     return this.cardList.length
