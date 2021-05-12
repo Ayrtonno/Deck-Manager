@@ -59,7 +59,7 @@ const main = async () => {
 
 
     app.listen(8080, () => {
-        console.log("listening")
+        console.log(`listening at: http://localhost:8080`)
     })
 }
 
