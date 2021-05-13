@@ -16,7 +16,9 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 //con Schema vado a definire la struttura del dato da inserire nel DB 
 const deckSchema = new Schema({
     name: { type: String, unique: true },
-    type: String,
+    type: {
+        type: String, enum: ["Christianity", "Animist", "Egyptian Deity", "Totemist"]
+    },
     cardList: [{
         type: Schema.Types.ObjectId,
         ref: "Card"

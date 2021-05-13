@@ -13,6 +13,12 @@ const HomePage = () => {
             setNewDecks(response.data.docs)
         })
     }, [])
+    const [offer, setOffer] = useState([])
+    useEffect(() => {
+        axios.get("http://localhost:8080/deck", { params: { limit: 5, price: "asc" } }).then((response) => {
+            setOffer(response.data.docs)
+        })
+    }, [])
     /* useEffect(() => {
         const deckNames = []
         for (let index = 0; index < newDecks.length; index++) {
@@ -32,6 +38,7 @@ const HomePage = () => {
             <Card>
                 <CardContent>
                     Latest Offers
+                    {offer.map((offer) => <p>{offer.name}</p>)}
                 </CardContent>
             </Card>
             <Card>
@@ -44,3 +51,7 @@ const HomePage = () => {
 };
 
 export default HomePage;
+
+
+//devi creare il modello order (ordine di acquisto), e con un ordine compro uno o piu deck. Imposta l'ordine, o provaci.
+//Imposta model e schema dell'ordine con riferimento del deck e le famose 4 crud

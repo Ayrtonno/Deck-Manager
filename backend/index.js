@@ -5,9 +5,12 @@ const cors = require('cors')
 const { Deck } = require("./models/deck")
 const { myMiddleware } = require("./myMiddleware")
 const { Card } = require("./models/card")
+const { deckRouter } = require("./routes/deck")
+const { orderRouter } = require("./routes/order")
+
+
 const main = async () => {
 
-    const { deckRouter } = require("./routes/deck")
     // Express espone una funzione che crea l'applicazione, quindi chiamiamo questa funzione
     const app = express()
 
@@ -21,6 +24,7 @@ const main = async () => {
     //cors è tipo myMiddleware, ma con le opzioni. Nelle tonde gli passiamo parametri per renderlo piu sicuro
     app.use(cors())
     app.use(deckRouter)
+    app.use(orderRouter)
 
     //variabili in minuscolo, classi in maiuscolo
     const tuna = new Deck({ name: "Tunadeck", type: "Water", cardNumber: 50, price: 5 })

@@ -3,7 +3,9 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 const cardSchema = new Schema({
     name: { type: String, unique: true },
-    type: String,
+    type: {
+        type: String, enum: ["Saint", "Artifact", "Building", "Benediction", "Curse", "Token"]
+    },
     energy: Number,
     atk: Number,
     def: Number

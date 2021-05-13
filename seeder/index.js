@@ -1,6 +1,6 @@
 const faker = require("faker")
 const axios = require("axios")
-const cardTypes = ["Fire", "Water", "Earth", "Air", "Holy", "Unholy", "Undead", "Ritual"]
+const cardTypes = ["Saint", "Artifact", "Building", "Benediction", "Curse", "Token"]
 
 const generateCard = () => {
     const name = faker.name.firstName()
@@ -18,8 +18,8 @@ const generateDeck = () => {
     type: String,
     cardNumber: Number,
     price: Number, */
-    const name = faker.name.findName()
-    const type = faker.commerce.productName()
+    const name = faker.commerce.productName()
+    const type = faker.random.arrayElement(["Christianity", "Animist", "Egyptian Deity", "Totemist"])
     const price = faker.commerce.price()
     const deck = { name, type, price }
     return deck
