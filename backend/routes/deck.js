@@ -1,6 +1,41 @@
 const express = require("express")
 const deckRouter = express.Router()
 const { Deck } = require("../models/deck")
+const { Order } = require("../models/order")
+
+deckRouter.get("/popular-decks", async (req, res) => {
+    try {
+        let boughtDeckIds = []
+        const allOrders = await Order.find({})
+
+        for (let index = 0; index < allOrders.length; index++) {
+            const order = allOrders[index];
+            for (let i = 0; i < order.cart.length; i++) {
+                const deckId = order.cart[i];
+                boughtDeckIds.push(deckId)
+            }
+        }
+        //let globalCounter = [{id, counter}]
+        let globalCounter = []
+        for (let index = 0; index < boughtDeckIds.length; index++) {
+            const search = boughtDeckIds[index].toHexString();
+            let counter = 0
+            boughtDeckIds.forEach(deckId => {
+                if (search === deckId.toHexString()) {
+                    counter += 1
+                }
+            });
+            let deckIdCounter = { search, counter }
+            globalCounter.push(deckIdCounter)
+        }
+        res.json({ globalCounter })
+
+    } catch (error) {
+        console.error(error)
+        res.send("Error!")
+    }
+})
+
 
 deckRouter.get("/deck", async (req, res) => {
     //res.json([...decks.values()])
@@ -14,12 +49,12 @@ deckRouter.get("/deck", async (req, res) => {
 
         // Prepare sort map values
         const sortMap = new Map();
-        
+
         const createdAt = req.query.createdAt;
         if (createdAt) {
             sortMap.set("createdAt", createdAt);
         }
-        
+
         const price = req.query.price; // = ""
         if (price) {
             sortMap.set("price", price);

@@ -51,7 +51,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-
-
-//devi creare il modello order (ordine di acquisto), e con un ordine compro uno o piu deck. Imposta l'ordine, o provaci.
-//Imposta model e schema dell'ordine con riferimento del deck e le famose 4 crud
