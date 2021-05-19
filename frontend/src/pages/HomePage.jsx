@@ -19,6 +19,11 @@ const HomePage = () => {
             setOffer(response.data.docs)
         })
     }, [])
+    const [popularDecks, setPopularDecks] = useState([])
+    useEffect(() => {
+        axios.get("http://localhost:8080/popular-decks").then((response) =>
+            setPopularDecks(response.data))
+    }, [])
     /* useEffect(() => {
         const deckNames = []
         for (let index = 0; index < newDecks.length; index++) {
@@ -44,6 +49,7 @@ const HomePage = () => {
             <Card>
                 <CardContent>
                     Popular Decks
+                    {popularDecks.map((popularDeck) => <p>{popularDeck.name}</p>)}
                 </CardContent>
             </Card>
         </div>

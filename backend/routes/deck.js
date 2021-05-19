@@ -5,18 +5,27 @@ const { Order } = require("../models/order")
 
 deckRouter.get("/popular-decks", async (req, res) => {
     try {
-        let boughtDeckIds = []
+        //let boughtDeckIds = []
+        const globalCounter = new Map()
         const allOrders = await Order.find({})
 
         for (let index = 0; index < allOrders.length; index++) {
             const order = allOrders[index];
             for (let i = 0; i < order.cart.length; i++) {
                 const deckId = order.cart[i];
-                boughtDeckIds.push(deckId)
+                //boughtDeckIds.push(deckId)
+                if (globalCounter.has(deckId.toHexString())) {
+                    const current = globalCounter.get(deckId.toHexString())
+                    globalCounter.set(deckId.toHexString(), current + 1)
+                }
+                else {
+                    globalCounter.set(deckId.toHexString(), 1)
+                }
             }
         }
+        console.log(globalCounter)
         //let globalCounter = [{id, counter}]
-        let globalCounter = []
+        /* let globalCounter = []
         for (let index = 0; index < boughtDeckIds.length; index++) {
             const search = boughtDeckIds[index].toHexString();
             let counter = 0
@@ -27,8 +36,19 @@ deckRouter.get("/popular-decks", async (req, res) => {
             });
             let deckIdCounter = { search, counter }
             globalCounter.push(deckIdCounter)
+        } */
+        const decks = []
+        /* globalCounter.forEach((counter, deckId) => {
+            const deck = await Deck.findById(deckId)
+            const deckObject = deck.toObject()
+            decks.push({ ...deckObject, counter })
+        }) */
+        for (const [deckId, counter] of globalCounter) {
+            const deck = await Deck.findById(deckId)
+            const deckObject = deck.toObject()
+            decks.push({ ...deckObject, counter })
         }
-        res.json({ globalCounter })
+        res.json(decks)
 
     } catch (error) {
         console.error(error)
