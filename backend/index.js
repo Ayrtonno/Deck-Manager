@@ -1,12 +1,17 @@
 const express = require("express")
 const mongoose = require("mongoose")
 const cors = require('cors')
+const expressSession = require("express-session")
+const passport = require("passport")
 
 const { Deck } = require("./models/deck")
 const { myMiddleware } = require("./myMiddleware")
 const { Card } = require("./models/card")
 const { deckRouter } = require("./routes/deck")
 const { orderRouter } = require("./routes/order")
+const { User } = require("./models/user")
+const argon2 = require("argon2")
+require("./config/auth")
 
 
 const main = async () => {
@@ -21,8 +26,15 @@ const main = async () => {
     //app.use serve per chiamare middleware json, che serve per parsare il body in json 
     app.use(express.json())
     app.use(myMiddleware)
-    //cors è tipo myMiddleware, ma con le opzioni. Nelle tonde gli passiamo parametri per renderlo piu sicuro
+    //cors è tipo myMiddleware, ma con le opzioni. Nelle tonde gli passiamo parametri per renderlo piu sicuro, e deve essere prima delle rotte
     app.use(cors())
+    //expressSession deve stare prima di passport.session
+    app.use(expressSession({ secret: "Tettone" }))
+    //localStrategy deve stare prima dell'initialize
+    //passport.use("local", localStrategy)
+    //initialize deve stare dopo le strategy
+    app.use(passport.initialize())
+    app.use(passport.session())
     app.use(deckRouter)
     app.use(orderRouter)
 
@@ -61,6 +73,22 @@ const main = async () => {
         }
     })
 
+    app.post("/login", passport.authenticate("local"), (req, res, next) => {
+        res.json({ user: req.user })
+
+    })
+
+    app.post("/sign-up", async (req, res) => {
+        try {
+            const hash = await argon2.hash(req.body.password)
+            const signUp = new User({ ...req.body, password: hash })
+            await signUp.save()
+            res.send("User Created!")
+        } catch (error) {
+            console.error(error)
+            res.send("Error")
+        }
+    })
 
     app.listen(8080, () => {
         console.log(`listening at: http://localhost:8080`)
