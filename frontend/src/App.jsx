@@ -7,9 +7,9 @@ import { BrowserRouter, Switch, Route } from "react-router-dom"
 
 import classes from "./App.module.css"
 
-import HomePage from "./pages/HomePage"
+import HomePage from "./pages/Homepage/HomePage"
 import SignUpPage from "./pages/SignUp/SignUpPage"
-import LogInPage from "./pages/Login/LogInPage"
+import LogInPage from "./pages/Login/LoginPage"
 
 const Deck = (props) => {
     return (

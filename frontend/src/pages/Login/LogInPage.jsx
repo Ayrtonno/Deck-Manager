@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react"
 import axios from "axios"
 import { useHistory } from "react-router"
 
-const LogInPage = () => {
+const LoginPage = () => {
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
     const [open, setOpen] = useState()
@@ -16,19 +16,19 @@ const LogInPage = () => {
             email: email,
             password: password
         })
-        setMessage(`${response.data.user.username} has logged in!`)
+        setMessage(`Welcome back, ${response.data.user.username}!`)
         setOpen(true)
     }
     return (
         <div>
-            Log In
+            Login
             <form onSubmit={onSubmit}>
                 <TextField label="Email" onChange={(e) => setEmail(e.target.value)} />
                 <TextField label="Password" onChange={(e) => setPassword(e.target.value)} />
-                <Button variant="contained" type="submit">Log In</Button>
+                <Button variant="contained" type="submit">Login</Button>
                 <Dialog open={open} onClose={() => setOpen(false)}>
                     <DialogTitle>
-                        Log In
+                        Login
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -45,4 +45,4 @@ const LogInPage = () => {
         </div>
     )
 }
-export default LogInPage
+export default LoginPage
