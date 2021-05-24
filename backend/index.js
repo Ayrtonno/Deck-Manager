@@ -75,7 +75,6 @@ const main = async () => {
 
     app.post("/login", passport.authenticate("local"), (req, res, next) => {
         res.json({ user: req.user })
-
     })
 
     app.post("/sign-up", async (req, res) => {

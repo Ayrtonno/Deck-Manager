@@ -2,10 +2,14 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 import { AppBar, IconButton, Toolbar, TextField } from "@material-ui/core"
 import { Menu } from "@material-ui/icons"
+import { BrowserRouter, Switch, Route } from "react-router-dom"
+
 
 import classes from "./App.module.css"
 
 import HomePage from "./pages/HomePage"
+import SignUpPage from "./pages/SignUp/SignUpPage"
+import LogInPage from "./pages/Login/LogInPage"
 
 const Deck = (props) => {
     return (
@@ -80,7 +84,19 @@ const App = () => {
                     <TextField label="Search for a Deck..." />
                 </Toolbar>
             </AppBar>
-            <HomePage />
+            <BrowserRouter>
+                <Switch>
+                    <Route path="/" exact>
+                        <HomePage />
+                    </Route>
+                    <Route path="/sign-up" exact>
+                        <SignUpPage />
+                    </Route>
+                    <Route path="/login" exact>
+                        <LogInPage />
+                    </Route>
+                </Switch>
+            </BrowserRouter>
         </>
     )
 }

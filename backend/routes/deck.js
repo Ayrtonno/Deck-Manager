@@ -23,7 +23,6 @@ deckRouter.get("/popular-decks", async (req, res) => {
                 }
             }
         }
-        console.log(globalCounter)
         //let globalCounter = [{id, counter}]
         /* let globalCounter = []
         for (let index = 0; index < boughtDeckIds.length; index++) {
