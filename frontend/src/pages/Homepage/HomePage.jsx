@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 
 import classes from "./HomePage.module.css"
-import { CardContent } from "@material-ui/core";
+import { CardContent, CardHeader, List, ListItem, ListItemText } from "@material-ui/core";
 
 const HomePage = () => {
     const [newDecks, setNewDecks] = useState([])
@@ -26,7 +26,7 @@ const HomePage = () => {
         axios.get("http://localhost:8080/popular-decks").then((response) =>
             setPopularDecks(response.data))
     }, [])
-    
+
     /* useEffect(() => {
         const deckNames = []
         for (let index = 0; index < newDecks.length; index++) {
@@ -38,23 +38,46 @@ const HomePage = () => {
     return (
         <div className={classes.quadratone}>
             <Card>
+                <CardHeader title="New Decks" subheader="The newest decks fresh out of your church!" />
                 <CardContent>
-                    New Decks
-                    {newDecks.map((newDeck) => <p>{newDeck.name}</p>)}
+                    <List>
+                        {newDecks.map((newDeck) => (
+                            <ListItem>
+                                <ListItemText primary={newDeck.name} />
+                            </ListItem>
+                        ))}
+                    </List>
+
                 </CardContent>
             </Card>
+
             <Card>
+                <CardHeader title="Offers" subheader="The cheapest decks on sale!" />
                 <CardContent>
-                    Latest Offers
-                    {offer.map((offer) => <p>{offer.name}</p>)}
+                    <List>
+                        {offer.map((offer) => (
+                            <ListItem>
+                                <ListItemText primary={offer.name} />
+                            </ListItem>
+                        ))}
+                    </List>
                 </CardContent>
+
             </Card>
+
             <Card>
+                <CardHeader title="Popular Decks" subheader="The most selled decks ever!" />
                 <CardContent>
-                    Popular Decks
-                    {popularDecks.map((popularDeck) => <p>{popularDeck.name}</p>)}
+                    <List>
+                        {popularDecks.map((popularDeck) => (
+                            <ListItem>
+                                <ListItemText primary={popularDeck.name} />
+                            </ListItem>
+                        ))}
+                    </List>
                 </CardContent>
             </Card>
+
         </div>
     );
 };
