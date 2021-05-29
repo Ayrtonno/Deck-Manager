@@ -4,6 +4,7 @@ const express = require("express")
 const expressSession = require("express-session")
 const mongoose = require("mongoose")
 const passport = require("passport")
+const MongoStore = require('connect-mongo');
 
 const { myMiddleware } = require("./myMiddleware")
 
@@ -31,9 +32,9 @@ const main = async () => {
     app.use(express.json())
     app.use(myMiddleware)
     //cors è tipo myMiddleware, ma con le opzioni. Nelle tonde gli passiamo parametri per renderlo piu sicuro, e deve essere prima delle rotte
-    app.use(cors())
+    app.use(cors({ origin: "http://localhost:3000", credentials: true }))
     //expressSession deve stare prima di passport.session
-    app.use(expressSession({ secret: "Tettone" }))
+    app.use(expressSession({ secret: "Tettone", store: MongoStore.create({ mongoUrl: "mongodb://root:example@localhost/test?authSource=admin" }) }))
     //localStrategy deve stare prima dell'initialize
     //passport.use("local", localStrategy)
     //initialize deve stare dopo le strategy
@@ -95,6 +96,15 @@ const main = async () => {
             console.error(error)
             res.send("Error")
         }
+    })
+
+    app.get("/user-info", (req, res) => {
+        res.json({ user: req.user })
+    })
+
+    app.get("/logout", (req, res) => {
+        req.logout();
+        res.send("You have been Logged Out!")
     })
 
     app.listen(8080, () => {
