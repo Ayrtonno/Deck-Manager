@@ -13,17 +13,20 @@ const HomePage = () => {
             setNewDecks(response.data.docs)
         })
     }, [])
+
     const [offer, setOffer] = useState([])
     useEffect(() => {
         axios.get("http://localhost:8080/deck", { params: { limit: 5, price: "asc" } }).then((response) => {
             setOffer(response.data.docs)
         })
     }, [])
+
     const [popularDecks, setPopularDecks] = useState([])
     useEffect(() => {
         axios.get("http://localhost:8080/popular-decks").then((response) =>
             setPopularDecks(response.data))
     }, [])
+    
     /* useEffect(() => {
         const deckNames = []
         for (let index = 0; index < newDecks.length; index++) {

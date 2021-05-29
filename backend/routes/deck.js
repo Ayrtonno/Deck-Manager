@@ -36,19 +36,29 @@ deckRouter.get("/popular-decks", async (req, res) => {
             let deckIdCounter = { search, counter }
             globalCounter.push(deckIdCounter)
         } */
+        /* 
         const decks = []
-        /* globalCounter.forEach((counter, deckId) => {
+        globalCounter.forEach((counter, deckId) => {
             const deck = await Deck.findById(deckId)
             const deckObject = deck.toObject()
             decks.push({ ...deckObject, counter })
-        }) */
+        }) 
         for (const [deckId, counter] of globalCounter) {
             const deck = await Deck.findById(deckId)
             const deckObject = deck.toObject()
             decks.push({ ...deckObject, counter })
         }
-        res.json(decks)
+        */
 
+        const addDeckInfoPromises = [...globalCounter.entries()].map(async ([deckId, counter]) => {
+            const deck = await Deck.findById(deckId)
+            const deckObject = deck.toObject()
+            return { ...deckObject, counter }
+        })
+
+        const decks = await Promise.all(addDeckInfoPromises)
+
+        res.json(decks)
     } catch (error) {
         console.error(error)
         res.send("Error!")

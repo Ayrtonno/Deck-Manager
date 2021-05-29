@@ -9,10 +9,14 @@ const SignUpPage = () => {
     const [email, setEmail] = useState()
     const [username, setUsername] = useState()
     const [password, setPassword] = useState()
+
     const [open, setOpen] = useState()
     const [message, setMessage] = useState()
+    
     const history = useHistory()
+    
     const goToHomepage = () => { history.push("/") }
+    
     const onSubmit = async (e) => {
         e.preventDefault()
         //nella post, i due elementi sono: ("URL", {body}) (come quello di insomnia) 
@@ -24,6 +28,7 @@ const SignUpPage = () => {
         setMessage(response.data)
         setOpen(true)
     }
+    
     return (
         <div>
             Sign Up
@@ -51,4 +56,5 @@ const SignUpPage = () => {
         </div>
     )
 }
+
 export default SignUpPage

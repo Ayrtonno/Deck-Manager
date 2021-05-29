@@ -6,10 +6,14 @@ import { useHistory } from "react-router"
 const LoginPage = () => {
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
+    
     const [open, setOpen] = useState()
     const [message, setMessage] = useState()
+
     const history = useHistory()
+    
     const goToHomepage = () => { history.push("/") }
+    
     const onSubmit = async (e) => {
         e.preventDefault()
         const response = await axios.post('http://localhost:8080/login', {
@@ -19,6 +23,7 @@ const LoginPage = () => {
         setMessage(`Welcome back, ${response.data.user.username}!`)
         setOpen(true)
     }
+    
     return (
         <div>
             Login
@@ -45,4 +50,5 @@ const LoginPage = () => {
         </div>
     )
 }
+
 export default LoginPage

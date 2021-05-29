@@ -1,18 +1,25 @@
 const argon2 = require("argon2")
 const passport = require("passport")
 const passportLocal = require("passport-local")
+
 const { User } = require("../models/user")
 
 const localStrategy = new passportLocal.Strategy({ usernameField: "email", passwordField: "password" }, async (email, password, done) => {
-    const user = await User.findOne({ email: email })
-    if (!user) {
-        done("Wrong Credentials!", null)
-    } else {
-        if (await argon2.verify(user.password, password)) {
-            done(null, user)
-        } else {
-            done("Wrong Password!", null)
+    try {
+        const user = await User.findOne({ email: email })
+        if (!user) {
+            throw new Error("User not found")
         }
+
+        const isValid = await argon2.verify(user.password, password)
+        if (!isValid) {
+            throw new Error("Invalid password")
+        }
+
+        done(null, user)
+    } catch (error) {
+        console.error(error)
+        done(error, null)
     }
 })
 

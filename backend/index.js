@@ -1,18 +1,22 @@
-const express = require("express")
-const mongoose = require("mongoose")
+const argon2 = require("argon2")
 const cors = require('cors')
+const express = require("express")
 const expressSession = require("express-session")
+const mongoose = require("mongoose")
 const passport = require("passport")
 
-const { Deck } = require("./models/deck")
 const { myMiddleware } = require("./myMiddleware")
+
+/* MODELS */
 const { Card } = require("./models/card")
+const { Deck } = require("./models/deck")
+const { User } = require("./models/user")
+
+/* ROUTERS */
 const { deckRouter } = require("./routes/deck")
 const { orderRouter } = require("./routes/order")
-const { User } = require("./models/user")
-const argon2 = require("argon2")
-require("./config/auth")
 
+require("./config/auth")
 
 const main = async () => {
 
@@ -35,18 +39,22 @@ const main = async () => {
     //initialize deve stare dopo le strategy
     app.use(passport.initialize())
     app.use(passport.session())
+
+    // ROUTERS
     app.use(deckRouter)
     app.use(orderRouter)
 
     //variabili in minuscolo, classi in maiuscolo
+    /*
     const tuna = new Deck({ name: "Tunadeck", type: "Water", cardNumber: 50, price: 5 })
     const simo = new Deck({ name: "Simodeck", type: "Holy", cardNumber: 50, price: 5 })
-    /* Map è una classe che dispone le informazione in coppie chiave-valore
-    const decks = new Map()
-    decks.set("0", tuna)
-    decks.set("1", simo) */
     //await tuna.save()
     //await simo.save()
+     Map è una classe che dispone le informazione in coppie chiave-valore
+    const decks = new Map()
+    decks.set("0", tuna)
+    decks.set("1", simo) 
+    */
 
     app.get("/deck/:deckId/card", async (req, res) => {
         try {

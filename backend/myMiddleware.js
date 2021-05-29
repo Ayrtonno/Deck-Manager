@@ -8,10 +8,11 @@ const myMiddleware = async (req, res, next) => {
     console.log(req.query);
     //await next() aspetta che la richiesta venga soddisfatta. Next sarebbe la prossima richiesta.
     const end = new Date();
-    const elapsed = end - start;
+    const elapsed = end.getTime() - start.getTime();
     res.append("X-ELAPSED-TIME", `${elapsed} ms`);
     //    console.log(elapsed);
     await next();
     console.log("Served request");
 };
+
 exports.myMiddleware = myMiddleware;
