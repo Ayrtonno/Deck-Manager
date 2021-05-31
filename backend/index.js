@@ -1,4 +1,3 @@
-const argon2 = require("argon2")
 const cors = require('cors')
 const express = require("express")
 const expressSession = require("express-session")
@@ -11,11 +10,11 @@ const { myMiddleware } = require("./myMiddleware")
 /* MODELS */
 const { Card } = require("./models/card")
 const { Deck } = require("./models/deck")
-const { User } = require("./models/user")
 
 /* ROUTERS */
 const { deckRouter } = require("./routes/deck")
 const { orderRouter } = require("./routes/order")
+const { authRouter } = require("./routes/auth")
 
 require("./config/auth")
 
@@ -44,6 +43,7 @@ const main = async () => {
     // ROUTERS
     app.use(deckRouter)
     app.use(orderRouter)
+    app.use(authRouter)
 
     //variabili in minuscolo, classi in maiuscolo
     /*
@@ -80,31 +80,6 @@ const main = async () => {
             console.error(error)
             res.send("Error")
         }
-    })
-
-    app.post("/login", passport.authenticate("local"), (req, res, next) => {
-        res.json({ user: req.user })
-    })
-
-    app.post("/sign-up", async (req, res) => {
-        try {
-            const hash = await argon2.hash(req.body.password)
-            const signUp = new User({ ...req.body, password: hash })
-            await signUp.save()
-            res.send("User Created!")
-        } catch (error) {
-            console.error(error)
-            res.send("Error")
-        }
-    })
-
-    app.get("/user-info", (req, res) => {
-        res.json({ user: req.user })
-    })
-
-    app.get("/logout", (req, res) => {
-        req.logout();
-        res.send("You have been Logged Out!")
     })
 
     app.listen(8080, () => {
