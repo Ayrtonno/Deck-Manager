@@ -19,9 +19,18 @@ const userSchema = new Schema({
         transform: function (_document, ret) {
             const { password, ...user } = ret
             return user
-        }
+        },
+        virtuals: true
     }
 })
+
+userSchema.virtual("fullName").get(function () {
+    return this.firstName + " " + this.lastName
+});
+
+/* const fullName = (user) => {
+    user.firstName + " " + user.lastName
+} */
 
 userSchema.methods.verifyEmail = async function (code) {
 
@@ -34,6 +43,17 @@ userSchema.methods.verifyEmail = async function (code) {
     this.isEmailVerified = true
     await this.save()
 }
+
+/* const verifyEmailAsFunction = async (user, code) => {
+    const isValid = constants.TOTPGenerator.check(code, constants.tokenSecret)
+ 
+    if (!isValid) {
+        throw new Error("Wrong code!")
+    }
+ 
+    user.isEmailVerified = true
+    await user.save()
+} */
 
 const User = model("User", userSchema)
 
