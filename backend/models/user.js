@@ -6,6 +6,13 @@ const userSchema = new Schema({
     email: { type: String, required: true, unique: true, lowercase: true },
     username: { type: String, required: true },
     password: { type: String, required: true },
+    firstName: { type: String },
+    lastName: { type: String },
+    address: { type: String },
+    city: { type: String },
+    nation: { type: String },
+    //phoneNumber è una stringa nel caso in cui ci sia il codice del paese (es. +39)
+    phoneNumber: { type: String },
     isEmailVerified: { type: Boolean, default: false },
 }, {
     timestamps: true, toJSON: {
