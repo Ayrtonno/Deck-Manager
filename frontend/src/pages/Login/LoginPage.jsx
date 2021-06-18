@@ -2,8 +2,13 @@ import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogContentTex
 import React, { useRef, useState } from "react"
 import axios from "axios"
 import { useHistory } from "react-router"
+import { useDispatch } from "react-redux"
+
+import { login } from "../../store/userSlice"
 
 const LoginPage = () => {
+    const dispatch = useDispatch();
+
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
     
@@ -20,6 +25,7 @@ const LoginPage = () => {
             email: email,
             password: password
         })
+        dispatch(login(response.data.user))
         setMessage(`Welcome back, ${response.data.user.username}!`)
         setOpen(true)
     }

@@ -4,7 +4,7 @@ import { AppBar, IconButton, Toolbar, TextField, Drawer, ListItem, List, ListIte
 import { Menu, PersonAdd, AccountCircle, Home, ShoppingCart, ExitToApp } from "@material-ui/icons"
 import { BrowserRouter, Switch, Route } from "react-router-dom"
 import { useHistory } from "react-router"
-
+import { useDispatch, useSelector } from "react-redux"
 
 import classes from "./App.module.css"
 
@@ -12,14 +12,17 @@ import HomePage from "./pages/Homepage/HomePage"
 import SignUpPage from "./pages/SignUp/SignUpPage"
 import LogInPage from "./pages/Login/LoginPage"
 import DeckInfoPage from "./pages/DeckInfo/DeckInfoPage"
+import { login, logout } from "./store/userSlice"
 
 // per react quest "App" è un componente funzionale perche è una funzione di per sè.
 const App = () => {
+    const userInfo = useSelector((store) => store.user.user)
+    const dispatch = useDispatch();
+
     const [isDrawerOpen, setDrawerOpen] = useState(false)
 
-    const history = useHistory(
+    const history = useHistory()
 
-    )
     const goToSignUp = () => {
         history.push("/sign-up")
         setDrawerOpen(false)
@@ -36,13 +39,20 @@ const App = () => {
         history.push("/cart")
         setDrawerOpen(false)
     }
+
     //questo vvvvv serve a vedere se l'user è gia loggato, e in caso le sue informazioni (quelle che abbiamo nel DB).
+    /*
     const [userInfo, setUserInfo] = useState()
+    */
     useEffect(() => {
         axios.get("http://localhost:8080/user-info").then((response) => {
-            setUserInfo(response.data.user)
+            // setUserInfo(response.data.user)
+            // response.data.user = action del reducer [userSlice -> reducers -> login]
+            dispatch(login(response.data.user))
+            // Equivalenti!
+            // dispatch({ type: "user/login", payload: response.data.user })
         })
-    }, [])
+    }, [dispatch])
 
     //questa funzione avverte il backend che deve invalidare la sessione, e sul frontend ripuliamo le informazioni
     /* const goToLogout = () => {
@@ -57,11 +67,13 @@ const App = () => {
         e.stopPropagation()
         e.preventDefault()
         await axios.get("http://localhost:8080/logout")
-        setUserInfo()
         setMessage("You have been Logged Out! BB :c")
         setOpen(true)
         setDrawerOpen(false)
+        // Chiama logout, è un reducer che non ha action e quindi nessun argomento
+        dispatch(logout())
     }
+
     return (
         <>
             <AppBar position="static">
@@ -149,7 +161,7 @@ const App = () => {
                 <DialogActions>
                     <Button color="primary" onClick={() => setOpen(false)}>
                         Close
-                            </Button>
+                    </Button>
                 </DialogActions>
             </Dialog>
         </>

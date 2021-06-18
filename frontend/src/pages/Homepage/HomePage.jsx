@@ -35,6 +35,7 @@ const HomePage = () => {
         }
         console.log(deckNames)
     }, [newDecks]) */
+
     return (
         <div className={classes.quadratone}>
             <Card>
