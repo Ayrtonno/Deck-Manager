@@ -3,6 +3,6 @@
   justify-content: space-around;
   padding: 24px;  
   background-color: black;
-  height: 50vh;
+  min-height: 50vh;
   align-items: center;
 }
