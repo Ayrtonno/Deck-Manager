@@ -2,6 +2,7 @@ import React from "react"
 import Card from "@material-ui/core/Card";
 import { useState, useEffect } from "react"
 import axios from "axios"
+import { useHistory } from "react-router"
 
 import classes from "./HomePage.module.css"
 import { CardContent, CardHeader, List, ListItem, ListItemText } from "@material-ui/core";
@@ -36,6 +37,10 @@ const HomePage = () => {
         console.log(deckNames)
     }, [newDecks]) */
 
+    const history = useHistory()
+
+    const goToDeckInfo = (deckId) => { history.push(`/deck-info/${deckId}`)}
+    
     return (
         <div className={classes.quadratone}>
             <Card>
@@ -43,7 +48,7 @@ const HomePage = () => {
                 <CardContent>
                     <List>
                         {newDecks.map((newDeck) => (
-                            <ListItem>
+                            <ListItem button onClick= {() => goToDeckInfo(newDeck.id)}> 
                                 <ListItemText primary={newDeck.name} />
                             </ListItem>
                         ))}
@@ -57,7 +62,7 @@ const HomePage = () => {
                 <CardContent>
                     <List>
                         {offer.map((offer) => (
-                            <ListItem>
+                            <ListItem button onClick= {() => goToDeckInfo(offer.id)}> 
                                 <ListItemText primary={offer.name} />
                             </ListItem>
                         ))}
@@ -71,7 +76,7 @@ const HomePage = () => {
                 <CardContent>
                     <List>
                         {popularDecks.map((popularDeck) => (
-                            <ListItem>
+                            <ListItem button onClick= {() => goToDeckInfo(popularDeck.id)}> 
                                 <ListItemText primary={popularDeck.name} />
                             </ListItem>
                         ))}

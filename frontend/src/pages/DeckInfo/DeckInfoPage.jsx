@@ -48,6 +48,7 @@ const DeckInfoPage = () => {
 
 export default DeckInfoPage;
 
+/* se riesco faccio la dispatch qua */
 
 
 
