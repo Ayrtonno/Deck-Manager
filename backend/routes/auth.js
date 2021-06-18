@@ -20,7 +20,7 @@ authRouter.post("/sign-up", async (req, res) => {
     const signUp = new User({ ...req.body, password: hash })
     await signUp.save()
 
-    const token = constants.TOTPGenerator.generate(tokenSecret)
+    const token = constants.TOTPGenerator.generate(constants.tokenSecret)
     console.log(token)
 
     res.send(`User Created! Verify your email with the following code: ${token}`)

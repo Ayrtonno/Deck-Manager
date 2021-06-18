@@ -10,7 +10,7 @@ const DeckInfoPage = () => {
     const [deck, setDeck] = useState({})
     const { deckId } = useParams()
     const fetchDeckInfo = async () => {
-        const response = await axios.get(`http://localhost:8080/deck/${deckId}`)
+        const response = await axios.get(`http://localhost:8080/deck/${deckId}/card`)
         setDeck(response.data)
     }
     const [counter, setCounter] = useState(0)
@@ -27,9 +27,17 @@ const DeckInfoPage = () => {
     return (
         <div>
             <h1>{deck.name}</h1>
+            <br/>
             <h3>{deck.type}</h3>
-            <p>{deck.cardList}</p>
-            <h5>{deck.price}</h5>
+            <br/>
+            <div>{deck?.cardList?.map((card) => <p>{card.name}</p>)}</div>
+            {/* const cardNameList = []
+                for card of deck?.cardList {
+                    cardNameList.push(<p>{card.name}</p>)
+                }
+                return cardNameList */}
+            <br/>
+            <h5>{deck.price}€</h5>
             <input type="number" />
             <IconButton>
                 <AddShoppingCart />
@@ -39,3 +47,7 @@ const DeckInfoPage = () => {
 }
 
 export default DeckInfoPage;
+
+
+
+
