@@ -1,32 +1,20 @@
 import React from "react"
 import Card from "@material-ui/core/Card";
-import { useState, useEffect } from "react"
-import axios from "axios"
 import { useHistory } from "react-router"
 
 import classes from "./HomePage.module.css"
 import { CardContent, CardHeader, List, ListItem, ListItemText } from "@material-ui/core";
+import { useGetDeckListQuery, useGetDeckListByPopularQuery, useGetDeckListByPriceQuery } from "../../store/api/deckApi";
 
 const HomePage = () => {
-    const [newDecks, setNewDecks] = useState([])
-    useEffect(() => {
-        axios.get("http://localhost:8080/deck", { params: { limit: 5 } }).then((response) => {
-            setNewDecks(response.data.docs)
-        })
-    }, [])
+    //nelle graffe ho 3 informazioni: data, quindi la risposta
+    //error, quindi se c'è stato un errore, 
+    //isLoading, se sta caricando
+    const {data: newDecks, error, isLoading} = useGetDeckListQuery(5)
 
-    const [offer, setOffer] = useState([])
-    useEffect(() => {
-        axios.get("http://localhost:8080/deck", { params: { limit: 5, price: "asc" } }).then((response) => {
-            setOffer(response.data.docs)
-        })
-    }, [])
-
-    const [popularDecks, setPopularDecks] = useState([])
-    useEffect(() => {
-        axios.get("http://localhost:8080/popular-decks").then((response) =>
-            setPopularDecks(response.data))
-    }, [])
+    const {data: offer} = useGetDeckListByPriceQuery({limit: 5, sort: "asc"})
+    
+    const {data: popularDecks} = useGetDeckListByPopularQuery()
 
     /* useEffect(() => {
         const deckNames = []
@@ -47,7 +35,7 @@ const HomePage = () => {
                 <CardHeader title="New Decks" subheader="The newest decks fresh out of your church!" />
                 <CardContent>
                     <List>
-                        {newDecks.map((newDeck) => (
+                        {newDecks?.docs?.map((newDeck) => (
                             <ListItem button onClick= {() => goToDeckInfo(newDeck.id)}> 
                                 <ListItemText primary={newDeck.name} />
                             </ListItem>
@@ -61,7 +49,7 @@ const HomePage = () => {
                 <CardHeader title="Offers" subheader="The cheapest decks on sale!" />
                 <CardContent>
                     <List>
-                        {offer.map((offer) => (
+                        {offer?.docs?.map((offer) => (
                             <ListItem button onClick= {() => goToDeckInfo(offer.id)}> 
                                 <ListItemText primary={offer.name} />
                             </ListItem>
@@ -75,7 +63,7 @@ const HomePage = () => {
                 <CardHeader title="Popular Decks" subheader="The most selled decks ever!" />
                 <CardContent>
                     <List>
-                        {popularDecks.map((popularDeck) => (
+                        {popularDecks?.docs?.map((popularDeck) => (
                             <ListItem button onClick= {() => goToDeckInfo(popularDeck.id)}> 
                                 <ListItemText primary={popularDeck.name} />
                             </ListItem>
