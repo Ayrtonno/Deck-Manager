@@ -14,9 +14,12 @@ export const deckApi = createApi({
     getDeckListByPopular: builder.query({
         query: () => `popular-decks`,
     }),
+    getDeckByInfo: builder.query({
+        query: (deckId) => `deck/${deckId}/card`,
+    }),
   }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetDeckListQuery, useGetDeckListByPopularQuery, useGetDeckListByPriceQuery } = deckApi
+export const { useGetDeckListQuery, useGetDeckListByPopularQuery, useGetDeckListByPriceQuery, useGetDeckByInfoQuery } = deckApi
