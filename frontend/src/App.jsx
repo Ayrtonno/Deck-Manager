@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import axios from "axios"
 import { AppBar, IconButton, Toolbar, TextField, Drawer, ListItem, List, ListItemIcon, ListItemText, Divider, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@material-ui/core"
-import { Menu, PersonAdd, AccountCircle, Home, ShoppingCart, ExitToApp } from "@material-ui/icons"
+import { Menu, PersonAdd, AccountCircle, Home, ShoppingCart, ExitToApp, QueryBuilderTwoTone } from "@material-ui/icons"
 // react router dom è quello che gestisce le rotte
 import { Switch, Route } from "react-router-dom"
 import { useHistory } from "react-router"
@@ -23,11 +23,11 @@ import SignUpPage from "./pages/SignUp/SignUpPage"
 import LogInPage from "./pages/Login/LoginPage"
 import DeckInfoPage from "./pages/DeckInfo/DeckInfoPage"
 import { login, logout } from "./store/userSlice"
+import { useGetUserInfoQuery } from "./store/api/userApi"
 
 // per react quest "App" è un componente funzionale perche è una funzione di per sè.
 const App = () => {
-    //con questo selector il mio componente APP riceve le informazioni dallo store
-    const userInfo = useSelector((store) => store.user.user)
+
     // dispatch serve a collegare le azioni al componente
     const dispatch = useDispatch();
 
@@ -57,17 +57,9 @@ const App = () => {
     //questo vvvvv serve a vedere se l'user è gia loggato, e in caso le sue informazioni (quelle che abbiamo nel DB).
     /*
     const [userInfo, setUserInfo] = useState()
-    */
-    useEffect(() => {
-        axios.get("http://localhost:8080/user-info").then((response) => {
-            // setUserInfo(response.data.user)
-            // response.data.user = action del reducer [userSlice -> reducers -> login]
-            //la dispatch sta informando lo sto che deve effettuare l'azione login con payload reponse.data.user
-            dispatch(login(response.data.user))
-            // Equivalenti!
-            // dispatch({ type: "user/login", payload: response.data.user })
-        })
-    }, [dispatch])
+    */  
+
+    const {data: userInfo} = useGetUserInfoQuery()
 
     //questa funzione avverte il backend che deve invalidare la sessione, e sul frontend ripuliamo le informazioni
     /* const goToLogout = () => {
@@ -190,4 +182,4 @@ const App = () => {
 }
 export default App
 
-
+//prova a fare logout (mutation simile a login) e la pagina con informazioni dell'utente

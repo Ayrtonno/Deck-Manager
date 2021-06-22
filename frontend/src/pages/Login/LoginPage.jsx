@@ -1,19 +1,24 @@
 import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@material-ui/core"
-import React, { useState } from "react"
-import axios from "axios"
+import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router"
-import { useDispatch } from "react-redux"
-
-import { login } from "../../store/userSlice"
+import { usePostLoginMutation } from "../../store/api/userApi"
 
 const LoginPage = () => {
-    const dispatch = useDispatch();
-
+    const [login, {data, isLoading}] = usePostLoginMutation()
+    
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
     
     const [open, setOpen] = useState()
     const [message, setMessage] = useState()
+
+    useEffect(() => {
+        // deve controllare che ci sia data e che isLoading sia false
+        if (data && !isLoading) {
+            setMessage(`Welcome back, ${data.user.username}!`)
+            setOpen(true)   
+        }
+    }, [data, isLoading])
 
     const history = useHistory()
     
@@ -21,15 +26,9 @@ const LoginPage = () => {
     
     const onSubmit = async (e) => {
         e.preventDefault()
-        const response = await axios.post('http://localhost:8080/login', {
-            email: email,
-            password: password
-        })
-        dispatch(login(response.data.user))
-        setMessage(`Welcome back, ${response.data.user.username}!`)
-        setOpen(true)
+        login({email, password})       
     }
-    
+
     return (
         <div>
             Login

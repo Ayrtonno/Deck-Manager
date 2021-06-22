@@ -28,3 +28,8 @@ export const deckApi = createApi({
 
 // a partire dagli endpoint mi crea questi hook vvvvvm perche io non uso direttamente un endpoint altrimenti perdere info
 export const { useGetDeckListQuery, useGetDeckListByPopularQuery, useGetDeckListByPriceQuery, useGetDeckByInfoQuery } = deckApi
+
+
+/* Prossime cose: persistere tra sessioni lo store
+configurare prettier e easylimit (uno dei due SOLO SU BACKEND)
+un poco di TYPESCRIPT*/
