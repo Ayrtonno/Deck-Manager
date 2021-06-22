@@ -1,11 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// create slice crea una porzione di store
 export const cartSlice = createSlice({
     name: "cart",
     initialState: {
       cart: [],
     },
+    // i reducers sono le cose che questa slice deve ricevere per poi metterle nello store
     reducers: {
+      // in questo caso deve ricevere addToCart, e come argomento il deck aggiunto. 
+      //Lo state è il valore della slice, mentre la action è il payload. Payload è l'argomento che passo nella dispatch
       addToCart: (state, action) => {
         const addedDeck = action.payload
         const currentCart = state.cart

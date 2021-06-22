@@ -49,16 +49,19 @@ deckRouter.get("/popular-decks", async (req, res) => {
             decks.push({ ...deckObject, counter })
         }
         */
-
+        
+        // una funzione async ti restituisce una promise, una cosa che verrà completata in futuro non sai quando.
         const addDeckInfoPromises = [...globalCounter.entries()].map(async ([deckId, counter]) => {
             const deck = await Deck.findById(deckId)
             const deckObject = deck.toObject()
             return { ...deckObject, counter }
         })
 
+        // promise all esegue le promise se tutte sono state risolte. se una è in errore mi fa throw error
         const decks = await Promise.all(addDeckInfoPromises)
 
         res.json(decks)
+        
     } catch (error) {
         console.error(error)
         res.send("Error!")

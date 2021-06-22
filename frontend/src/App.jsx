@@ -2,8 +2,18 @@ import { useState, useEffect } from "react"
 import axios from "axios"
 import { AppBar, IconButton, Toolbar, TextField, Drawer, ListItem, List, ListItemIcon, ListItemText, Divider, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@material-ui/core"
 import { Menu, PersonAdd, AccountCircle, Home, ShoppingCart, ExitToApp } from "@material-ui/icons"
-import { BrowserRouter, Switch, Route } from "react-router-dom"
+// react router dom è quello che gestisce le rotte
+import { Switch, Route } from "react-router-dom"
 import { useHistory } from "react-router"
+
+// tu inizi a creare una app che col tempo continua a crescere. man mano che cresce inizio ad avere molte props, molto state e molte callback.
+// diventa quindi difficile separare componenti le une dalle altre (tanti file interdipendenti fra loro, tipo albero ma al contrario)
+// rischio quindi cosi, che modificando un componente, intacco lo stato degli altri componenti, sputtanando tutto. 
+// supponiamo voglio riusare un componente in un altra parte, se è intrecciato con altri componenti diventa difficile "duplicarlo"
+// lo STORE (generico del frontend, in questo caso fatto con redux) organizza le informazioni 
+// i reducer salvano nello store le informazioni delle dispatch, che interagiscono con i componenti, aggiornandolo
+// i selector espongono le informazioni del mio componente
+// di per se stora info utili
 import { useDispatch, useSelector } from "react-redux"
 
 import classes from "./App.module.css"
@@ -16,11 +26,15 @@ import { login, logout } from "./store/userSlice"
 
 // per react quest "App" è un componente funzionale perche è una funzione di per sè.
 const App = () => {
+    //con questo selector il mio componente APP riceve le informazioni dallo store
     const userInfo = useSelector((store) => store.user.user)
+    // dispatch serve a collegare le azioni al componente
     const dispatch = useDispatch();
 
+    // lo state è di react e serve a settare dati locali (che mi servono in questo componente e non ad un altro)
     const [isDrawerOpen, setDrawerOpen] = useState(false)
 
+    // la history mi salva in memoria le pagine visitate
     const history = useHistory()
 
     const goToSignUp = () => {
@@ -48,6 +62,7 @@ const App = () => {
         axios.get("http://localhost:8080/user-info").then((response) => {
             // setUserInfo(response.data.user)
             // response.data.user = action del reducer [userSlice -> reducers -> login]
+            //la dispatch sta informando lo sto che deve effettuare l'azione login con payload reponse.data.user
             dispatch(login(response.data.user))
             // Equivalenti!
             // dispatch({ type: "user/login", payload: response.data.user })
@@ -63,9 +78,13 @@ const App = () => {
     const [open, setOpen] = useState()
     const [message, setMessage] = useState()
 
+    // "e" sta per event, 
     const goToLogout = async (e) => {
+        // stopPropagation ferma la propagazione dell'evento al DOM (quello che vedo sul browser)
         e.stopPropagation()
+        // ogni evento ha un azione di default, in questo caso da NON eseguire
         e.preventDefault()
+
         await axios.get("http://localhost:8080/logout")
         setMessage("You have been Logged Out! BB :c")
         setOpen(true)
@@ -74,6 +93,7 @@ const App = () => {
         dispatch(logout())
     }
 
+    // in app.jsx tengo le cose che voglio vedere in tutte le pagine sempre
     return (
         <>
             <AppBar position="static">
@@ -134,6 +154,7 @@ const App = () => {
                 </List>
             </Drawer>
 
+            {/* switch è un componente di react router dom che visualizza in automatico la pagina giusta in base alla rotta specificata */}
             <Switch>
                 <Route path="/" exact>
                     <HomePage />

@@ -8,6 +8,7 @@ const store = configureStore({
     user: userReducer,
     [deckApi.reducerPath] : deckApi.reducer
   },
+  // roba di redux vvvvv
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(deckApi.middleware),
 });
 
