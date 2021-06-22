@@ -1,9 +1,10 @@
+// algoritmo di hashing delle password
 const argon2 = require("argon2")
 const express = require("express")
 const passport = require("passport")
-const { totp } = require("otplib")
 const { constants } = require("../config/constants")
 
+//vvvv crea un nuovo router chiamato auth
 const authRouter = express.Router()
 
 const { User } = require("../models/user")

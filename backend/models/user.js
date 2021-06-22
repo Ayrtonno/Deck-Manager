@@ -1,5 +1,4 @@
 const { Schema, model } = require("mongoose");
-const { totp } = require("otplib")
 const { constants } = require("../config/constants")
 
 const userSchema = new Schema({
@@ -16,6 +15,7 @@ const userSchema = new Schema({
     isEmailVerified: { type: Boolean, default: false },
 }, {
     timestamps: true, toJSON: {
+        // la transform prende il model user e ne rimuove la password cosi quando mando user al frontend, non mando anche la password (nasconde la password)
         transform: function (_document, ret) {
             const { password, ...user } = ret
             return user
@@ -32,8 +32,10 @@ userSchema.virtual("fullName").get(function () {
     user.firstName + " " + user.lastName
 } */
 
+// è una funzione associata ad un entità, in questo caso l'utente. Argomento è code
 userSchema.methods.verifyEmail = async function (code) {
 
+    // vvvv controlla che il codice dell'utente siccome tokenSecret sa se il codice è giusto o meno
     const isValid = constants.TOTPGenerator.check(code, constants.tokenSecret)
 
     if (!isValid) {
@@ -41,6 +43,7 @@ userSchema.methods.verifyEmail = async function (code) {
     }
 
     this.isEmailVerified = true
+    // this.save() salva le informazioni dell'utente nel database
     await this.save()
 }
 

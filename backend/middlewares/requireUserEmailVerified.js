@@ -1,4 +1,6 @@
+
 const requireUserEmailVerified = (req, res, next) => {
+  //req.user ci arriva dalla deserialize
   const user = req.user
   if (!user) {
     return res.status(403).json({ 
@@ -10,6 +12,7 @@ const requireUserEmailVerified = (req, res, next) => {
       message: "Please verify your email!",
     })
   }
+  //la next serve per dire all'app di continuare
   return next()
 }
 

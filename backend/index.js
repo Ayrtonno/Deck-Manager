@@ -1,10 +1,17 @@
+// il cors serve ad autorizzare i nostri frontend, accettando le sue richieste
 const cors = require('cors')
+// express è il server http dell'aplicazione (node js + express sono le fondamenta)
 const express = require("express")
+// session serve per salvare le informazioni dell utente fra sessioni, cosi dal cookie possiamo sapere chi accede all'app
 const expressSession = require("express-session")
+// mongoose si occupa del database (ODM - object document model)
 const mongoose = require("mongoose")
+// passport si occupa dell'autenticazione, ovvero identifica chi è l'utente
 const passport = require("passport")
+// adattatore delle sessioni di express per mongo, ovvero salviamo le sessioni express sul database mongo
 const MongoStore = require('connect-mongo');
 
+//middleware --- funzione che sta fra funzioni (nel nostro caso controlla se l'user ha l'email verificata o meno), è una funziona in un altro file
 const { myMiddleware } = require("./myMiddleware")
 
 /* MODELS */
@@ -16,6 +23,7 @@ const { deckRouter } = require("./routes/deck")
 const { orderRouter } = require("./routes/order")
 const { authRouter } = require("./routes/auth")
 
+// vvvvv la nostra strategia di autenticazione
 require("./config/auth")
 
 const main = async () => {
@@ -82,9 +90,11 @@ const main = async () => {
         }
     })
 
+    // app.listen apre un socket, ovvero ascolta solo la porta 8080
     app.listen(8080, () => {
         console.log(`listening at: http://localhost:8080`)
     })
 }
 
+//vvvv chiama la funzione main
 main()
