@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import axios from "axios"
 import { AppBar, IconButton, Toolbar, TextField, Drawer, ListItem, List, ListItemIcon, ListItemText, Divider, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@material-ui/core"
 import { Menu, PersonAdd, AccountCircle, Home, ShoppingCart, ExitToApp, QueryBuilderTwoTone } from "@material-ui/icons"
@@ -29,7 +29,7 @@ import { useGetLogoutMutation, useGetUserInfoQuery } from "./store/api/userApi"
 const App = () => {
 
     // dispatch serve a collegare le azioni al componente
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     // lo state è di react e serve a settare dati locali (che mi servono in questo componente e non ad un altro)
     const [isDrawerOpen, setDrawerOpen] = useState(false)
@@ -66,20 +66,20 @@ const App = () => {
             setUserInfo()
         })
     } */
-    const [open, setOpen] = useState()
+    const [open, setOpen] = useState(false)
     const [message, setMessage] = useState()
 
     const {data: userInfo} = useGetUserInfoQuery()
 
-    const [logout, {isLoading}] = useGetLogoutMutation()
+    const [logout, {isLoading, data: logoutResponse, isUninitialized: hasLoggedOut}] = useGetLogoutMutation()
 
     useEffect(() => {
-        if (!isLoading) {
+        if (!isLoading && logoutResponse && !hasLoggedOut) {
             setMessage("You have been Logged Out! BB :c")
             setOpen(true)
-            setDrawerOpen(false)  
+            setDrawerOpen(false)
         }
-    }, [isLoading])
+    }, [hasLoggedOut, isLoading, logoutResponse])
 
     /* // "e" sta per event, 
     const goToLogout = async (e) => {
@@ -95,6 +95,8 @@ const App = () => {
         // Chiama logout, è un reducer che non ha action e quindi nessun argomento
         dispatch(logout())
     } */
+
+    const isLogged = useMemo(() => userInfo?.id, [userInfo?.id])
 
     // in app.jsx tengo le cose che voglio vedere in tutte le pagine sempre
     return (
@@ -120,7 +122,7 @@ const App = () => {
                         <ListItemText primary={"Homepage"} />
                     </ListItem>
                     <Divider />
-                    {!userInfo ? (
+                    {!isLogged ? (
                         <ListItem button onClick={goToSignUp}>
                             <ListItemIcon>
                                 <PersonAdd />
@@ -128,7 +130,7 @@ const App = () => {
                             <ListItemText primary={"Sign Up"} />
                         </ListItem>
                     ) : <></>}
-                    {!userInfo ? (
+                    {!isLogged ? (
                         <ListItem button onClick={goToLogin}>
                             <ListItemIcon>
                                 <AccountCircle />
@@ -136,7 +138,7 @@ const App = () => {
                             <ListItemText primary={"Login"} />
                         </ListItem>
                     ) : <></>}
-                    {userInfo ? (
+                    {isLogged ? (
                         <ListItem button onClick={goToCart}>
                             <ListItemIcon>
                                 <ShoppingCart />
@@ -145,8 +147,8 @@ const App = () => {
                         </ListItem>
                     ) : <></>}
                     <Divider />
-                    {userInfo ? (
-                        <ListItem button onClick={logout}>
+                    {isLogged ? (
+                        <ListItem button onClick={() => logout()}>
                             <ListItemIcon>
                                 <ExitToApp />
                             </ListItemIcon>

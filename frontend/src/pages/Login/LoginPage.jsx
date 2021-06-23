@@ -4,21 +4,21 @@ import { useHistory } from "react-router"
 import { usePostLoginMutation } from "../../store/api/userApi"
 
 const LoginPage = () => {
-    const [login, {data, isLoading}] = usePostLoginMutation()
+    const [login, {data: user, isLoading}] = usePostLoginMutation()
     
     const [email, setEmail] = useState()
     const [password, setPassword] = useState()
     
-    const [open, setOpen] = useState()
+    const [open, setOpen] = useState(false)
     const [message, setMessage] = useState()
 
     useEffect(() => {
         // deve controllare che ci sia data e che isLoading sia false
-        if (data && !isLoading) {
-            setMessage(`Welcome back, ${data.user.username}!`)
+        if (user?.username && !isLoading) {
+            setMessage(`Welcome back, ${user.username}!`)
             setOpen(true)   
         }
-    }, [data, isLoading])
+    }, [user?.username, isLoading])
 
     const history = useHistory()
     
