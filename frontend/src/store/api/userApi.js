@@ -25,11 +25,18 @@ export const userApi = createApi({
       // stiamo specificando che il login modifica user
       invalidatesTags: ["user"]
     }),
+
+    getLogout: builder.mutation({
+      query: () => "logout",
+      invalidatesTags: ["user"]
+    }),
+
     getUserInfo: builder.query({
       query: () => "user-info",
+      keepUnusedDataFor: 1,
       invalidatesTags: ["user"]
     })
   }),
 });
 
-export const { usePostLoginMutation, useGetUserInfoQuery } = userApi 
+export const { usePostLoginMutation, useGetUserInfoQuery, useGetLogoutMutation } = userApi 

@@ -14,7 +14,7 @@ import { useHistory } from "react-router"
 // i reducer salvano nello store le informazioni delle dispatch, che interagiscono con i componenti, aggiornandolo
 // i selector espongono le informazioni del mio componente
 // di per se stora info utili
-import { useDispatch, useSelector } from "react-redux"
+import { useDispatch} from "react-redux"
 
 import classes from "./App.module.css"
 
@@ -22,8 +22,8 @@ import HomePage from "./pages/Homepage/HomePage"
 import SignUpPage from "./pages/SignUp/SignUpPage"
 import LogInPage from "./pages/Login/LoginPage"
 import DeckInfoPage from "./pages/DeckInfo/DeckInfoPage"
-import { login, logout } from "./store/userSlice"
-import { useGetUserInfoQuery } from "./store/api/userApi"
+import UserInfoPage from "./pages/UserInfo/UserInfoPage"
+import { useGetLogoutMutation, useGetUserInfoQuery } from "./store/api/userApi"
 
 // per react quest "App" è un componente funzionale perche è una funzione di per sè.
 const App = () => {
@@ -59,7 +59,6 @@ const App = () => {
     const [userInfo, setUserInfo] = useState()
     */  
 
-    const {data: userInfo} = useGetUserInfoQuery()
 
     //questa funzione avverte il backend che deve invalidare la sessione, e sul frontend ripuliamo le informazioni
     /* const goToLogout = () => {
@@ -70,7 +69,19 @@ const App = () => {
     const [open, setOpen] = useState()
     const [message, setMessage] = useState()
 
-    // "e" sta per event, 
+    const {data: userInfo} = useGetUserInfoQuery()
+
+    const [logout, {isLoading}] = useGetLogoutMutation()
+
+    useEffect(() => {
+        if (!isLoading) {
+            setMessage("You have been Logged Out! BB :c")
+            setOpen(true)
+            setDrawerOpen(false)  
+        }
+    }, [isLoading])
+
+    /* // "e" sta per event, 
     const goToLogout = async (e) => {
         // stopPropagation ferma la propagazione dell'evento al DOM (quello che vedo sul browser)
         e.stopPropagation()
@@ -83,7 +94,7 @@ const App = () => {
         setDrawerOpen(false)
         // Chiama logout, è un reducer che non ha action e quindi nessun argomento
         dispatch(logout())
-    }
+    } */
 
     // in app.jsx tengo le cose che voglio vedere in tutte le pagine sempre
     return (
@@ -135,7 +146,7 @@ const App = () => {
                     ) : <></>}
                     <Divider />
                     {userInfo ? (
-                        <ListItem button onClick={goToLogout}>
+                        <ListItem button onClick={logout}>
                             <ListItemIcon>
                                 <ExitToApp />
                             </ListItemIcon>
@@ -160,6 +171,9 @@ const App = () => {
                 <Route path="/deck-info/:deckId" exact>
                     <DeckInfoPage />
                 </Route>
+                <Route path="/user-info" exact>
+                    <UserInfoPage />
+                </Route>
             </Switch>
 
             <Dialog open={open} onClose={() => setOpen(false)}>
@@ -180,6 +194,8 @@ const App = () => {
         </>
     )
 }
+
 export default App
 
-//prova a fare logout (mutation simile a login) e la pagina con informazioni dell'utente
+//prova a fare get logout (mutation simile a login) e la pagina con informazioni dell'utente
+//domani validare i form
