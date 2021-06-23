@@ -36,7 +36,7 @@ const HomePage = () => {
                 <CardContent>
                     <List>
                         {newDecks?.docs?.map((newDeck) => (
-                            <ListItem button onClick= {() => goToDeckInfo(newDeck.id)}> 
+                            <ListItem key={`latest_deck_${newDeck.id}`} button onClick= {() => goToDeckInfo(newDeck.id)}> 
                                 <ListItemText primary={newDeck.name} />
                             </ListItem>
                         ))}
@@ -50,7 +50,7 @@ const HomePage = () => {
                 <CardContent>
                     <List>
                         {offer?.docs?.map((offer) => (
-                            <ListItem button onClick= {() => goToDeckInfo(offer.id)}> 
+                            <ListItem key={`cheapest_deck_${offer.id}`} button onClick= {() => goToDeckInfo(offer.id)}> 
                                 <ListItemText primary={offer.name} />
                             </ListItem>
                         ))}
@@ -64,7 +64,7 @@ const HomePage = () => {
                 <CardContent>
                     <List>
                         {popularDecks?.docs?.map((popularDeck) => (
-                            <ListItem button onClick= {() => goToDeckInfo(popularDeck.id)}> 
+                            <ListItem key={`popular_deck_${offer.id}`} button onClick= {() => goToDeckInfo(popularDeck.id)}> 
                                 <ListItemText primary={popularDeck.name} />
                             </ListItem>
                         ))}
