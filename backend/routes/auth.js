@@ -50,7 +50,7 @@ authRouter.get("/user-info", (req, res) => {
 
 authRouter.get("/logout", (req, res) => {
   req.logout();
-  res.send("You have been Logged Out!")
+  res.json({ message: "You have been Logged Out!" })
 })
 
 exports.authRouter = authRouter
