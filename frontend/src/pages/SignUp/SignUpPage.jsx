@@ -2,6 +2,19 @@ import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogContentTex
 import React, { useState } from "react"
 import axios from "axios"
 import { useHistory } from "react-router"
+import * as yup from 'yup';
+
+let schema = yup.object().shape({
+    email: yup.string().email().required(),
+    username: yup.string().required(),
+    password: yup.string().required(),
+    firstName: yup.string(),
+    lastName: yup.string(),
+    address: yup.string(),
+    city: yup.string(),
+    nation: yup.string(),
+    phoneNumber: yup.number().integer(),
+  });
 
 const SignUpPage = () => {
     /*con ref posso accedere direttamente ad un elemento della pagina, in questo caso sul text field email

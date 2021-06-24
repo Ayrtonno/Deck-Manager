@@ -1,7 +1,14 @@
 import { TextField, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@material-ui/core"
 import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router"
+import * as yup from 'yup';
+
 import { usePostLoginMutation } from "../../store/api/userApi"
+
+let schema = yup.object().shape({
+    email: yup.string().email().required(),
+    passwod: yup.string().required(),
+  });
 
 const LoginPage = () => {
     const [login, {data: user, isLoading}] = usePostLoginMutation()
