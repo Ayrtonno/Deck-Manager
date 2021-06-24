@@ -10,7 +10,7 @@ const HomePage = () => {
     //nelle graffe ho 3 informazioni: data, quindi la risposta
     //error, quindi se c'è stato un errore, 
     //isLoading, se sta caricando
-    const {data: newDecks, error, isLoading} = useGetDeckListQuery(5)
+    const {data: newDecks} = useGetDeckListQuery(5)
 
     const {data: offer} = useGetDeckListByPriceQuery({limit: 5, sort: "asc"})
     

@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react"
-import axios from "axios"
 import { AppBar, IconButton, Toolbar, TextField, Drawer, ListItem, List, ListItemIcon, ListItemText, Divider, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from "@material-ui/core"
-import { Menu, PersonAdd, AccountCircle, Home, ShoppingCart, ExitToApp, QueryBuilderTwoTone } from "@material-ui/icons"
+import { Menu, PersonAdd, AccountCircle, Home, ShoppingCart, ExitToApp} from "@material-ui/icons"
 // react router dom è quello che gestisce le rotte
 import { Switch, Route } from "react-router-dom"
 import { useHistory } from "react-router"
@@ -14,7 +13,6 @@ import { useHistory } from "react-router"
 // i reducer salvano nello store le informazioni delle dispatch, che interagiscono con i componenti, aggiornandolo
 // i selector espongono le informazioni del mio componente
 // di per se stora info utili
-import { useDispatch} from "react-redux"
 
 import classes from "./App.module.css"
 
@@ -47,6 +45,10 @@ const App = () => {
     }
     const goToHomePage = () => {
         history.push("/")
+        setDrawerOpen(false)
+    }
+    const goToUserInfo = () => {
+        history.push("/user-info")
         setDrawerOpen(false)
     }
     const goToCart = () => {
@@ -136,6 +138,14 @@ const App = () => {
                                 <AccountCircle />
                             </ListItemIcon>
                             <ListItemText primary={"Login"} />
+                        </ListItem>
+                    ) : <></>}
+                    {isLogged ? (
+                        <ListItem button onClick={goToUserInfo}>
+                            <ListItemIcon>
+                                <AccountCircle />
+                            </ListItemIcon>
+                            <ListItemText primary={"User Info"} />
                         </ListItem>
                     ) : <></>}
                     {isLogged ? (
