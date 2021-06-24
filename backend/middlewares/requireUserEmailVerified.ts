@@ -1,7 +1,8 @@
-
-const requireUserEmailVerified = (req, res, next) => {
+import { Request, Response, NextFunction } from "express"
+import { iUser } from "../models/user"
+export const requireUserEmailVerified = (req: Request , res: Response, next: NextFunction) => {
   //req.user ci arriva dalla deserialize
-  const user = req.user
+  const user = req.user as iUser
   if (!user) {
     return res.status(403).json({ 
       message: "Please login first!",
@@ -15,5 +16,3 @@ const requireUserEmailVerified = (req, res, next) => {
   //la next serve per dire all'app di continuare
   return next()
 }
-
-exports.requireUserEmailVerified = requireUserEmailVerified

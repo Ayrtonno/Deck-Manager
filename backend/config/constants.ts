@@ -1,5 +1,5 @@
 // otplib serve a generare i token temporanei per validare l'email.
-const { totp } = require("otplib")
+import { totp } from "otplib"
 
 //vvvv resistuisce opzioni di base e poi noi, con il totp.create ne sovrascriviamo le opzioni
 const defaultOptions = totp.allOptions()
@@ -12,9 +12,7 @@ const TOTPGenerator = totp.create({
 })
 
 // tokenSecret è tipo un seed per la generazione dei codici
-const constants = {
+export const constants = {
     tokenSecret: "W1gP2Vdkj0cvOkOs",
     TOTPGenerator
 }
-
-exports.constants = constants

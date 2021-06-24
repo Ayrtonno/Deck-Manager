@@ -1,7 +1,7 @@
-const express = require("express")
+import express from "express"
 const deckRouter = express.Router()
-const { Deck } = require("../models/deck")
-const { Order } = require("../models/order")
+import { Deck } from "../models/deck"
+import { Order } from "../models/order"
 
 deckRouter.get("/popular-decks", async (req, res) => {
     try {
@@ -53,7 +53,7 @@ deckRouter.get("/popular-decks", async (req, res) => {
         // una funzione async ti restituisce una promise, una cosa che verrà completata in futuro non sai quando.
         const addDeckInfoPromises = [...globalCounter.entries()].map(async ([deckId, counter]) => {
             const deck = await Deck.findById(deckId)
-            const deckObject = deck.toObject()
+            const deckObject = deck!.toObject()
             return { ...deckObject, counter }
         })
 
@@ -92,10 +92,10 @@ deckRouter.get("/deck", async (req, res) => {
             sortMap.set("price", price);
         }
 
-        const specs = { offset: offset, limit: limit, sort: sortMap };
+        const specs = { offset: parseInt(offset as string), limit: parseInt(limit as string), sort: sortMap };
 
         const name = req.query.name;
-        const query = {};
+        const query: any = {};
         if (name) {
             query.name = name;
         }
@@ -163,4 +163,4 @@ deckRouter.delete("/deck/:id", async (req, res) => {
     }
 })
 
-exports.deckRouter = deckRouter
+export default deckRouter

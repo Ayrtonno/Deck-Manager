@@ -1,32 +1,30 @@
 // il cors serve ad autorizzare i nostri frontend, accettando le sue richieste
-const cors = require('cors')
+import cors from 'cors'
 // express è il server http dell'aplicazione (node js + express sono le fondamenta)
-const express = require("express")
+import express from "express"
 // session serve per salvare le informazioni dell utente fra sessioni, cosi dal cookie possiamo sapere chi accede all'app
-const expressSession = require("express-session")
+import expressSession from "express-session"
 // mongoose si occupa del database (ODM - object document model)
-const mongoose = require("mongoose")
+import mongoose from "mongoose"
 // passport si occupa dell'autenticazione, ovvero identifica chi è l'utente
-const passport = require("passport")
+import passport from "passport"
 // adattatore delle sessioni di express per mongo, ovvero salviamo le sessioni express sul database mongo
-const MongoStore = require('connect-mongo');
+import MongoStore from 'connect-mongo'
 
 //middleware --- funzione che sta fra funzioni (nel nostro caso controlla se l'user ha l'email verificata o meno), è una funziona in un altro file
-const { myMiddleware } = require("./myMiddleware")
+import { myMiddleware } from "./myMiddleware"
 
 /* MODELS */
-const { Card } = require("./models/card")
-const { Deck } = require("./models/deck")
+import { Card } from "./models/card"
+import { Deck } from "./models/deck"
 
 /* ROUTERS */
-const { deckRouter } = require("./routes/deck")
-const { orderRouter } = require("./routes/order")
-const { authRouter } = require("./routes/auth")
-
-// vvvvv la nostra strategia di autenticazione
-require("./config/auth")
+import deckRouter from "./routes/deck"
+import orderRouter from "./routes/order"
+import authRouter from "./routes/auth"
 
 const main = async () => {
+    await import("./config/auth")
 
     // Express espone una funzione che crea l'applicazione, quindi chiamiamo questa funzione
     const app = express()
@@ -81,6 +79,9 @@ const main = async () => {
             const newCard = new Card({ ...req.body })
             await newCard.save()
             const deck = await Deck.findById(req.params.deckId)
+            if (!deck) {
+                return res.status(404).json({message: "Deck not found! :c"})
+            }
             deck.cardList.push(newCard)
             await deck.save()
             res.json(newCard)

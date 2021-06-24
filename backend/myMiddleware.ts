@@ -1,6 +1,7 @@
 //myMiddleware è una funziona asincrona che prende 3 parametri (req, req e next)
 //async = non risolta immediatamente
-const myMiddleware = async (req, res, next) => {
+import { Request, Response, NextFunction } from "express"
+export const myMiddleware = async (req: Request , res: Response, next: NextFunction) => {
     const start = new Date();
     console.log("Called my middleware");
     console.log(req.body);
@@ -15,4 +16,3 @@ const myMiddleware = async (req, res, next) => {
     console.log("Served request");
 };
 
-exports.myMiddleware = myMiddleware;

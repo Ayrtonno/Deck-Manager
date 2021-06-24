@@ -1,18 +1,23 @@
-/* class Deck {
-    constructor(name, type, cardNumber, price){
-        this.name = name
-        this.type = type
-        this.cardNumber = cardNumber
-        this.price = price
-    }
+import { Schema, model, PaginateModel, Document, PopulatedDoc } from "mongoose";
+// paginate in automatico pagina le informazioni del database
+import mongoosePaginate from 'mongoose-paginate-v2';
+import deckRouter from "../routes/deck";
+import { iCard } from "./card";
+
+enum DeckTypes {
+    Christianity = "Christianity",
+    Animist = "Animist",
+    EgyptianDeity = "Egyptian Deity",
+    Totemist = "Totemist"
 }
 
-exports.Deck = Deck
-*/
-
-const { Schema, model } = require("mongoose");
-// paginate in automatico pagina le informazioni del database
-const mongoosePaginate = require('mongoose-paginate-v2');
+export interface iDeck extends Document {
+    name: string
+    type: DeckTypes
+    cardList: PopulatedDoc <iCard>
+    price: number
+    cardNumber: number
+}
 
 //con Schema vado a definire la struttura del dato da inserire nel DB 
 const deckSchema = new Schema({
@@ -31,7 +36,7 @@ const deckSchema = new Schema({
     timestamps: true })
 
     //i virtual sono proprietà derivate, quando risolvi in json, devi risolvere anche i virtuals, in questo caso quanto lungo è l'array cardList del deck
-deckSchema.virtual("cardNumber").get(function () {
+deckSchema.virtual("cardNumber").get(function (this: iDeck) {
     return this.cardList.length
 })
 
@@ -41,9 +46,8 @@ deckSchema.plugin(mongoosePaginate)
 /* deckSchema.methods.incrementPrice = function () {
     this.price = this.price + 10
 } */
+interface DeckModel <T extends Document> extends PaginateModel<T> {} 
 
 //con Model decido dove mettere il deckSchema 
-const Deck = model("Deck", deckSchema)
-
-exports.Deck = Deck
+export const Deck: DeckModel<iDeck> = model("Deck", deckSchema)
 

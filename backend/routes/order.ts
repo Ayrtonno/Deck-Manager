@@ -1,13 +1,13 @@
-const express = require("express")
+import express from "express"
 const orderRouter = express.Router()
-const { Order } = require("../models/order")
+import { Order } from "../models/order"
 
 orderRouter.get("/order", async (req, res) => {
     try {
         let orders
 
         const { offset, limit } = req.query;
-        const specs = { offset: offset, limit: limit };
+        const specs = { offset: parseInt(offset as string), limit: parseInt(limit as string)};
         orders = await Order.paginate({}, specs)
 
         if (orders.totalDocs === 0) {
@@ -61,4 +61,4 @@ orderRouter.delete("/order/:id", async (req, res) => {
     }
 })
 
-exports.orderRouter = orderRouter
+export default orderRouter

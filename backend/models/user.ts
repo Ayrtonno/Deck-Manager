@@ -1,7 +1,22 @@
-const { Schema, model } = require("mongoose");
-const { constants } = require("../config/constants")
+import { Schema, model, Document } from "mongoose";
+import { constants } from "../config/constants";
 
-const userSchema = new Schema({
+export interface iUser extends Document {
+    email: string
+    username: string
+    password: string
+    firstName: string
+    lastName: string
+    address: string
+    city: string
+    nation: string
+    phoneNumber: number
+    isEmailVerified: boolean
+    fullName: string
+    verifyEmail: Function
+}
+
+const userSchema = new Schema<iUser>({
     email: { type: String, required: true, unique: true, lowercase: true },
     username: { type: String, required: true },
     password: { type: String, required: true },
@@ -10,8 +25,7 @@ const userSchema = new Schema({
     address: { type: String },
     city: { type: String },
     nation: { type: String },
-    //phoneNumber è una stringa nel caso in cui ci sia il codice del paese (es. +39)
-    phoneNumber: { type: String },
+    phoneNumber: { type: Number },
     isEmailVerified: { type: Boolean, default: false },
 }, {
     timestamps: true, toJSON: {
@@ -24,7 +38,7 @@ const userSchema = new Schema({
     }
 })
 
-userSchema.virtual("fullName").get(function () {
+userSchema.virtual("fullName").get(function (this: iUser) {
     return this.firstName + " " + this.lastName
 });
 
@@ -58,6 +72,4 @@ userSchema.methods.verifyEmail = async function (code) {
     await user.save()
 } */
 
-const User = model("User", userSchema)
-
-exports.User = User
+export const User = model<iUser>("User", userSchema)

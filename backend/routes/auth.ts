@@ -1,13 +1,13 @@
 // algoritmo di hashing delle password
-const argon2 = require("argon2")
-const express = require("express")
-const passport = require("passport")
-const { constants } = require("../config/constants")
+import argon2 from "argon2"
+import express from "express"
+import passport from "passport"
+import { constants } from "../config/constants"
 
 //vvvv crea un nuovo router chiamato auth
 const authRouter = express.Router()
 
-const { User } = require("../models/user")
+import { iUser, User } from "../models/user"
 
 // const { requireUserEmailVerified } = require("../middlewares/requireUserEmailVerified")
 
@@ -35,7 +35,10 @@ authRouter.get("/verify-email", async (req, res) => {
 
   try {
     const code = req.query.code;
-    const user = req.user;
+    const user = req.user as iUser;
+    if (!user) {
+      return res.status(401).json({message: " You are not logged in! :c"})
+    }
     //PRIMA succede await user.verifyEmail, e il (code) va nel method dentro /models/user, per poi decidere se andare alla 40 o 42
     await user.verifyEmail(code)
     res.json({ message: "Email successfully verified!" })
@@ -53,4 +56,4 @@ authRouter.get("/logout", (req, res) => {
   res.json({ message: "You have been Logged Out!" })
 })
 
-exports.authRouter = authRouter
+export default authRouter
