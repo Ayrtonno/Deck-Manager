@@ -4,12 +4,16 @@ import cors from 'cors'
 import express from "express"
 // session serve per salvare le informazioni dell utente fra sessioni, cosi dal cookie possiamo sapere chi accede all'app
 import expressSession from "express-session"
+// multer gestisce il caricamento dei file
+import multer from "multer"
 // mongoose si occupa del database (ODM - object document model)
 import mongoose from "mongoose"
 // passport si occupa dell'autenticazione, ovvero identifica chi è l'utente
 import passport from "passport"
 // adattatore delle sessioni di express per mongo, ovvero salviamo le sessioni express sul database mongo
 import MongoStore from 'connect-mongo'
+//fs sono tutte le funzioni disponibili a node per operare sul file system, leggere file, crearli, etcetcetc
+import fs from "fs/promises"
 
 //middleware --- funzione che sta fra funzioni (nel nostro caso controlla se l'user ha l'email verificata o meno), è una funziona in un altro file
 import { myMiddleware } from "./myMiddleware"
@@ -28,6 +32,7 @@ const main = async () => {
 
     // Express espone una funzione che crea l'applicazione, quindi chiamiamo questa funzione
     const app = express()
+    const upload = multer({storage: multer.memoryStorage()})
 
     /* Serve per connettersi al database vvvvv mongodb è il protocollo, root:example sono le credenziali 
     e @ indica il dominio e /test indica il nome del database. (Funziona anche senza le altre 2 parti) */
@@ -91,6 +96,21 @@ const main = async () => {
         }
     })
 
+    app.post("/user/avatar", upload.single("avatar"), async (req, res) => {
+        try {
+            const avatarFile = req.file
+            if (!avatarFile) {
+                throw new Error("Invalid avatar!");                            
+            }
+            await fs.writeFile(`./uploads/${avatarFile.originalname}`, avatarFile.buffer)
+            console.log(avatarFile)
+            res.send("Your avatar has been uploaded!")
+        } catch (error) {
+            console.error(error)
+            res.send("Error")
+        }
+    })
+
     // app.listen apre un socket, ovvero ascolta solo la porta 8080
     app.listen(8080, () => {
         console.log(`listening at: http://localhost:8080`)
@@ -99,3 +119,7 @@ const main = async () => {
 
 //vvvv chiama la funzione main
 main()
+
+
+//far si che il frontend manda l'immagine al backend, sapere chi ha uploadato il file, facendolo sempre con l'auth (con passport), e anche salvare
+//l'utente X ha messo avatar Y, e poi generare casualmente il nome del file   
