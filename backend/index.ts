@@ -15,6 +15,11 @@ import MongoStore from 'connect-mongo'
 //fs sono tutte le funzioni disponibili a node per operare sul file system, leggere file, crearli, etcetcetc
 import fs from "fs/promises"
 
+//genera gli id per le user pics
+import { nanoid } from 'nanoid'
+
+import mime  from 'mime-types'
+
 //middleware --- funzione che sta fra funzioni (nel nostro caso controlla se l'user ha l'email verificata o meno), è una funziona in un altro file
 import { myMiddleware } from "./myMiddleware"
 
@@ -26,6 +31,8 @@ import { Deck } from "./models/deck"
 import deckRouter from "./routes/deck"
 import orderRouter from "./routes/order"
 import authRouter from "./routes/auth"
+import { requireUserEmailVerified } from './middlewares/requireUserEmailVerified'
+import { iUser } from './models/user'
 
 const main = async () => {
     await import("./config/auth")
@@ -96,14 +103,23 @@ const main = async () => {
         }
     })
 
-    app.post("/user/avatar", upload.single("avatar"), async (req, res) => {
+    app.post("/user/avatar", requireUserEmailVerified,  upload.single("avatar"), async (req, res) => {
         try {
             const avatarFile = req.file
+            
             if (!avatarFile) {
                 throw new Error("Invalid avatar!");                            
             }
-            await fs.writeFile(`./uploads/${avatarFile.originalname}`, avatarFile.buffer)
-            console.log(avatarFile)
+            const extension = mime.extension(avatarFile.mimetype)
+            const picId = nanoid()
+            const userPicture = picId + extension
+            if (!extension) {
+                throw new Error("Invalid File!");               
+            }
+            const path = `./uploads/${userPicture}`
+            const user = req.user as iUser
+            await fs.writeFile(path, avatarFile.buffer)  
+            user.uploadPic(path)          
             res.send("Your avatar has been uploaded!")
         } catch (error) {
             console.error(error)

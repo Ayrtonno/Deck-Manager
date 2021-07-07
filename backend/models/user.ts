@@ -13,7 +13,9 @@ export interface iUser extends Document {
     phoneNumber: number
     isEmailVerified: boolean
     fullName: string
+    avatar: string
     verifyEmail: Function
+    uploadPic: Function
 }
 
 const userSchema = new Schema<iUser>({
@@ -27,6 +29,7 @@ const userSchema = new Schema<iUser>({
     nation: { type: String },
     phoneNumber: { type: Number },
     isEmailVerified: { type: Boolean, default: false },
+    avatar: {type: String}
 }, {
     timestamps: true, toJSON: {
         // la transform prende il model user e ne rimuove la password cosi quando mando user al frontend, non mando anche la password (nasconde la password)
@@ -58,6 +61,11 @@ userSchema.methods.verifyEmail = async function (code) {
 
     this.isEmailVerified = true
     // this.save() salva le informazioni dell'utente nel database
+    await this.save()
+}
+
+userSchema.methods.uploadPic = async function (pic) {
+    this.avatar = pic
     await this.save()
 }
 
